@@ -14,10 +14,10 @@ class StudentRegisterSerializer(serializers.ModelSerializer):
         model = Student
         fields = ['username', 'email', 'password', 'confirm_password']
         extra_kwargs = {
-            'password' : {'write_only': True}
+            'password': {'write_only': True}
         }
 
-        def save(self):
+        def create(self, validated_data):
             student = Student(
                 username=self.validated_data['username'],
                 email=self.validated_data['email'],
