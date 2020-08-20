@@ -3,12 +3,15 @@ from .models import Student, Teacher
 
 
 class StudentTestCase(TestCase):
+
     def setUp(self):
-        Student.objects.create(username="student1",
-                               first_name="gaurav",
-                               last_name="jaiswal",
-                               email='email1@gmail.com'
-                               )
+
+        self.student = Student.objects.create(
+            username="student1",
+            first_name="gaurav",
+            last_name="jaiswal",
+            email='email1@gmail.com'
+        )
 
     def test_first_name_label(self):
         author = Student.objects.get(id=1)
