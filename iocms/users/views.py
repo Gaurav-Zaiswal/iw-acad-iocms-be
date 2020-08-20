@@ -3,7 +3,7 @@ from rest_framework import mixins, viewsets
 from rest_framework import generics
 
 from .models import Student, Teacher
-from .serializers import StudentRegistrationSerializer
+from .serializers import StudentRegistrationSerializer, TeacherRegistrationSerializer
 
 
 class CreateStudentView(generics.CreateAPIView,
@@ -15,4 +15,13 @@ class CreateStudentView(generics.CreateAPIView,
     ]
     serializer_class = StudentRegistrationSerializer
 
+
+class CreateTeacherView(generics.CreateAPIView,
+                        viewsets.GenericViewSet):
+
+    model = Teacher
+    permission_classes = [
+        permissions.AllowAny
+    ]
+    serializer_class = TeacherRegistrationSerializer
 
