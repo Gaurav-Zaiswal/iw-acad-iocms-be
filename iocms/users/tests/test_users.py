@@ -46,13 +46,16 @@ class AccountsTest(APITestCase):
         response = self.client.post("/users/api/student-register/", student_data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['username'], student_data['username'])
+        self.assertEqual(response.data['email'], student_data['email'])
+        self.assertFalse('password' in response.data)
 
     def test_create_teacher(self):
 
         """
         Ensure we can create a new user and a valid token is created with it.
         """
-        student_data = {
+        teacher_data = {
             'username': 'teacher_one',
             'first_name': 'Hari',
             'last_name': "bahadur",
@@ -60,6 +63,10 @@ class AccountsTest(APITestCase):
             'password': 'somepassword123'
         }
 
-        response = self.client.post("/users/api/teacher-register/", student_data, format='json')
+        response = self.client.post("/users/api/teacher-register/", teacher_data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Teacher.objects.count(), 1)
+        self.assertEqual(response.data['username'], teacher_data['username'])
+        self.assertEqual(response.data['email'], teacher_data['email'])
+        self.assertFalse('password' in response.data)
