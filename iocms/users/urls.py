@@ -17,4 +17,3 @@ urlpatterns = [
     path('', include(router.urls)),
     path('api/login/', auth_views.obtain_auth_token, name='login')
 ]
-

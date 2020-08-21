@@ -24,4 +24,3 @@ class CreateTeacherView(generics.CreateAPIView,
         permissions.AllowAny
     ]
     serializer_class = TeacherRegistrationSerializer
-
