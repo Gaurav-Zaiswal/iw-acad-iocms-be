@@ -34,13 +34,18 @@ class AccountsTest(APITestCase):
     def test_create_student(self):
 
         """
-        Ensure we can create a new user and a valid token is created with it.
+        Ensure we can create a new user.
         """
         student_data = {
             'username': 'student_one',
             'first_name': 'ram',
             'last_name': "bahadur",
             'email': 'one@email.com',
+            'password': 'somepassword'
+        }
+
+        student_login_data = {
+            'username': 'one@email.com',
             'password': 'somepassword'
         }
 
@@ -51,16 +56,27 @@ class AccountsTest(APITestCase):
         self.assertEqual(response.data['email'], student_data['email'])
         self.assertFalse('password' in response.data)
 
+        # check whether or not token is generated
+        response = self.client.post("/users/api/login/", student_login_data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Token.objects.count(), 1)
+
     def test_create_teacher(self):
 
         """
-        Ensure we can create a new user and a valid token is created with it.
+        Ensure we can create a new user
         """
         teacher_data = {
             'username': 'teacher_one',
             'first_name': 'Hari',
             'last_name': "bahadur",
             'email': 'two@email.com',
+            'password': 'somepassword123'
+        }
+
+        teacher_login_data = {
+            'username': 'two@email.com',
             'password': 'somepassword123'
         }
 
@@ -71,3 +87,11 @@ class AccountsTest(APITestCase):
         self.assertEqual(response.data['username'], teacher_data['username'])
         self.assertEqual(response.data['email'], teacher_data['email'])
         self.assertFalse('password' in response.data)
+
+        # check whether or not token is generated
+        response = self.client.post("/users/api/login/", teacher_login_data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Token.objects.count(), 1)
+
+
