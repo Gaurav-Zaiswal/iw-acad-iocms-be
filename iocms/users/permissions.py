@@ -1,4 +1,4 @@
-from rest_framework.permissons import BasePermission
+from rest_framework.permissions import BasePermission
 
 
 class IsStudentUser(BasePermission):
