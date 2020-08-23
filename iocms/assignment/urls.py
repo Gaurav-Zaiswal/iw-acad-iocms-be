@@ -5,5 +5,5 @@ app_name = 'assignment'
 urlpatterns = [
     path('list', AssignmentView.as_view(), name = 'list'),
     path('list/<int:pk>/', AssignmentDetailView.as_view(), name = 'details'),
-    path('submit/', AssignmentSubmitView.as_view(), name = 'submit')
+    path('list/<int:pk>/submit/', AssignmentSubmitView.as_view(), name = 'submit')
 ] 
