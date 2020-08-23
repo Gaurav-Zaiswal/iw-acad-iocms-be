@@ -13,7 +13,7 @@ class AssignmentAdmin(admin.ModelAdmin):
 @admin.register(AssignmentByStudent)
 class AssignmentAdmin(admin.ModelAdmin):
     
-    list_display = ( 'student','submisson_date')
+    list_display = ( 'student', 'assignment_details','submisson_date')
 
     class Meta:
         model = AssignmentByStudent
