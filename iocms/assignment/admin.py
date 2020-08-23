@@ -7,7 +7,7 @@ from .models import Assignment, AssignmentByStudent
 class AssignmentAdmin(admin.ModelAdmin):
     list_display = ('title', 'teacher', 'creation_date', 'deadline')
 
-    class Mets:
+    class Meta:
         model = Assignment
 
 @admin.register(AssignmentByStudent)
