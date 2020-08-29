@@ -6,9 +6,7 @@ from .models import  Assignment, AssignmentByStudent
 
 
 
-
-class AssignmentCreateSerializer(serializers.ModelSerializer):
-    class Meta:
+class AssignmentCreateSerializer(serializers.ModelSerializer):    class Meta:
         model = Assignment
         fields = ['id', 'title', 'description', 'points', 'deadline','teacher']
 
