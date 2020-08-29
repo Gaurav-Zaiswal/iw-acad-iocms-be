@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.fields import CurrentUserDefault
 from rest_framework.relations import HyperlinkedIdentityField 
 from users.models import Teacher, Student
 from .models import  Assignment, AssignmentByStudent
@@ -7,12 +8,10 @@ from .models import  Assignment, AssignmentByStudent
 
 
 class AssignmentCreateSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Assignment
-        fields = ['id', 'teacher', 'title', 'description','points', 'deadline']
+        fields = ['id', 'title', 'description', 'points', 'deadline','teacher']
 
-   
 
 class AssignmentListSerializer(serializers.HyperlinkedModelSerializer):
     details = HyperlinkedIdentityField(lookup_field = 'pk', view_name='assignment:details')
