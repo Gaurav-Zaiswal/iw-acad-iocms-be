@@ -5,6 +5,7 @@ from .views import ClassroomView, ClassroomDetailView, ClassroomCreateView, Clas
 app_name = 'class'
 
 urlpatterns = [
+
     path('api/', ClassroomView.as_view()),
     path('api/create/', ClassroomCreateView.as_view()),
     path('api/list/', ClassroomListView.as_view()),

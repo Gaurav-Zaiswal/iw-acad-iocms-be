@@ -1,0 +1,18 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>New Assignment</title>
+    </head>
+    <body>
+        Hi there, <br>
+        {{teacher.full_name}} has posted new assignment. <br>
+        <b><a href="http://{{domain}}{%url 'assignment:details' pk=pk %}">Here</a> </b> is the link for assignment. <br>
+        
+        The deadline is {{deadline|date:"F d Y"}} {{deadline|date:"h i a"}}  Please submit your assignment before deadline. 
+         
+</body>
+</html>
