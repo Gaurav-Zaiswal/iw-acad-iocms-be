@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'users',
-    'class',
+    'classroom',
 
     'rest_framework',
     'rest_framework.authtoken',
