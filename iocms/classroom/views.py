@@ -71,7 +71,7 @@ class ClassroomListView(APIView):
             enrolled_student = ClassroomStudents.objects.filter(enrolled_student_id__in=[request.user.id])
             # example O/P from above <QuerySet [<ClassroomStudents: class12>, <ClassroomStudents: class1>,
             # <ClassroomStudents: New class >]>
-            
+
             # query to extract Classroom model fields by passing classroom_id
             student_enrolled_class_list = [classroom.classroom_id for classroom in enrolled_student]
             serializer = ClassroomListSerializer(student_enrolled_class_list, many=True)

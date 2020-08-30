@@ -5,9 +5,10 @@ from .views import ClassroomView, ClassroomDetailView, ClassroomCreateView, Clas
 app_name = 'class'
 
 urlpatterns = [
-    path('', ClassroomView.as_view()),
-    path('create/', ClassroomCreateView.as_view()),
-    path('list/', ClassroomListView.as_view()),
-    path('detail/<int:pk>', ClassroomDetailView.as_view()),
-    path('join/', ClassroomAddView.as_view())
+
+    path('api/', ClassroomView.as_view()),
+    path('api/create/', ClassroomCreateView.as_view()),
+    path('api/list/', ClassroomListView.as_view()),
+    path('api/detail/<int:pk>', ClassroomDetailView.as_view()),
+    path('api/join/', ClassroomAddView.as_view())
 ]
