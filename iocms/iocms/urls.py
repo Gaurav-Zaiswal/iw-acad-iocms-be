@@ -5,7 +5,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('class/', include('class.urls')),
+    path('class/', include('classroom.urls')),
     path('users/', include('users.urls'), name="user-register"),
     path('assignment-api/', include('assignment.urls', namespace='assignment'))
 ]

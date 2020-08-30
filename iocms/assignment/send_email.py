@@ -13,8 +13,10 @@ def send_email(request, assignemnt_model, student_model, serializer):
     id_of_new_assignemnt = serializer.data["id"]
     new_assignment_data = assignemnt_model.objects.get(id=id_of_new_assignemnt)
     student_email_list = []
-    for student in student_model.objects.all():
+    for student in student_model.enrolled_student_id.all():
         student_email_list.append(student.user.email)
+    
+    print(student_email_list)
         
     email_subject = f'New assignment posted by {new_assignment_data.teacher}'
     current_site = get_current_site(request)

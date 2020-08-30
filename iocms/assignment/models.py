@@ -1,13 +1,13 @@
 from django.db import models
 from django.utils.timezone import now 
-
+from classroom.models import Classroom , ClassroomStudents
 from users.models import Student, Teacher 
 
 #assignment post by teacher
 class Assignment(models.Model):
     id = models.AutoField(primary_key=True)
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
-    # class_name = models.ForeignKey(Class, on_delete=models.CASCADE)
+    class_name = models.ForeignKey(Classroom, on_delete=models.CASCADE)
     title = models.CharField(max_length=150)
     description = models.TextField(blank = True, null = True)
     points = models.IntegerField()

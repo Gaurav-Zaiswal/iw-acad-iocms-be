@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'users',
-    'class',
+    'classroom',
     'assignment',
 
     'rest_framework',
