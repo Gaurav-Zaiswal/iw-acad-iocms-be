@@ -48,12 +48,3 @@ class ClassroomAddSerializer(serializers.ModelSerializer):
 
 
 
-# class ClassroomFeedListSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = ClassroomFeed
-#         fields = ['id', 'class_name', 'class_description','class_code', 'created_by', ]
-#
-#     def to_representation(self, instance):
-#         response = super().to_representation(instance)
-#         response['created_by'] = TeacherSerializer(instance.created_by).data
-#         return response
