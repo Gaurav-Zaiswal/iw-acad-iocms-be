@@ -45,18 +45,7 @@ class ClassroomAddSerializer(serializers.ModelSerializer):
         return response 
 
 
-# serializer for feed
 
-# class ClassroomFeedCreateSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = ClassroomFeed
-#         fields = "__all__"
-#
-#     def to_representation(self, instance):
-#         response = super().to_representation(instance)
-#         response['posted_by'] = TeacherSerializer(instance.teacher_id).data
-#
-#         return response
 
 
 # class ClassroomFeedListSerializer(serializers.ModelSerializer):
