@@ -80,3 +80,32 @@ class TeacherRegistrationSerializer(serializers.ModelSerializer):
         teacher.save()
 
         return user
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id','first_name', 'last_name', 'is_teacher', 'is_student']
+
+
+class TeacherSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Teacher 
+        fields = "__all__"
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response["user"] = UserSerializer(instance.user).data
+        return response 
+
+class StudentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Student 
+        fields = "__all__"
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response["user"] = UserSerializer(instance.user).data
+        return response 

@@ -4,9 +4,10 @@ from django.core.exceptions import PermissionDenied
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated 
 
-from users.permissions import IsTeacherUser
+from users.permissions import IsTeacherUser, IsStudentUser
+from users.models import User
 
 from .models import Classroom, ClassroomStudents
 from .serializers import ClassroomCreateSerializer, ClassroomDetailSerializer, ClassroomListSerializer, \
@@ -26,21 +27,22 @@ class ClassroomView(APIView):
 
 
 class ClassroomCreateView(APIView):
-    permission_classes = [IsTeacherUser]
+    permission_classes = [IsAuthenticated,] 
 
     def post(self, request):
-        serializer = ClassroomCreateSerializer(data=request.data)
-        request.data['created_by'] = request.user.id
-        if serializer.is_valid():
-            serializer.save()
+        if request.user.is_teacher:
+            serializer = ClassroomCreateSerializer(data=request.data)
+            request.data['created_by'] = request.user.id
+            if serializer.is_valid():
+                serializer.save()
 
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            raise PermissionDenied('Only teacher can create class')
 # Classroom detail
 class ClassroomDetailView(APIView):
-    permission_classes = [IsTeacherUser]
+    # permission_classes = [IsTeacherUser, IsStudentUser]
 
     def get_object(self, pk):
         try:
@@ -56,22 +58,23 @@ class ClassroomDetailView(APIView):
         else:
             raise PermissionDenied("You do not have permission to view classes of other users.")
 
-
 # Classroom List
 class ClassroomListView(APIView):
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        user = request.user
+        user_id = request.user.id
+        
+        user = User.objects.get(id = user_id) 
         if user.is_teacher:
-            query = Classroom.objects.filter(created_by_id=user.id)
+            query = Classroom.objects.filter(created_by_id=user_id)
             serializer = ClassroomListSerializer(query, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             # query for list of class where student is enrolled
-            enrolled_student = ClassroomStudents.objects.filter(enrolled_student_id__in=[request.user.id])
+            enrolled_student = ClassroomStudents.objects.filter(enrolled_student_id__in=[user.id])
             # example O/P from above <QuerySet [<ClassroomStudents: class12>, <ClassroomStudents: class1>,
             # <ClassroomStudents: New class >]>
-
             # query to extract Classroom model fields by passing classroom_id
             student_enrolled_class_list = [classroom.classroom_id for classroom in enrolled_student]
             serializer = ClassroomListSerializer(student_enrolled_class_list, many=True)
@@ -80,6 +83,7 @@ class ClassroomListView(APIView):
 
 class ClassroomAddView(APIView):
     permission_classes = [IsAuthenticated]
+
 
     def post(self, request):
         query = request.data["class_code"]

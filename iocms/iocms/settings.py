@@ -41,8 +41,7 @@ INSTALLED_APPS = [
     'classroom',
 
     'assignment',
-
-
+    'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
 ]
@@ -55,9 +54,15 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'iocms.urls'
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000'
+]
 
 TEMPLATES = [
     {
@@ -141,6 +146,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
+    
 }
 
 
