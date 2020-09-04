@@ -1,5 +1,6 @@
 from django.db import models
 from users.models import Teacher, Student
+from assignment.models import Assignment
 from django.utils.timezone import now
 import random, string
 
@@ -30,3 +31,14 @@ class ClassroomStudents(models.Model):
 
     def __str__(self):
         return self.classroom_id.class_name[0:10]
+
+
+class ClassroomFeed(models.Model):
+    classroom_id = models.ManyToManyField(Classroom, blank=True)
+    assignment_id = models.OneToOneField(Assignment, blank=True)
+    teacher_id = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+
+    assignment_description = models.CharField(max_length=500)
+
+    def __str__(self):
+        return f"Feed of {self.classroom_id.class_name} posted by {self.teacher_id.username}"
