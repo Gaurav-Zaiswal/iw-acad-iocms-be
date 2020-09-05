@@ -7,9 +7,9 @@ from classroom.models import Classroom
 
 
 class ClassroomFeed(models.Model):
-    classroom_id = models.ManyToManyField(Classroom, blank=True)
-    assignment_id = models.OneToOneField(Assignment, on_delete=models.CASCADE, blank=True, null=True)
-    posted_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    classroom_id = models.ManyToManyField(Classroom)
+    assignment_id = models.OneToOneField(Assignment, on_delete=models.CASCADE, null=True)
+    posted_by = models.ForeignKey(Teacher, on_delete=models.CASCADE)
 
     assignment_title = models.CharField(max_length=150)
     assignment_description = models.CharField(max_length=500)

@@ -12,7 +12,7 @@ class ClassroomFeedCreateSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
-        response['posted_by'] = TeacherSerializer(instance.teacher_id).data
+        response['posted_by'] = TeacherSerializer(instance.posted_by).data
 
         return response
 
