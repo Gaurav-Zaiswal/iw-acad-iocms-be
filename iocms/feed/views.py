@@ -54,3 +54,4 @@ class ClassroomFeedDetailView(APIView):
         serializer = ClassroomFeedDetailSerializer(query)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
