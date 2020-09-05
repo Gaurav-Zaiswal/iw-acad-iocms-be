@@ -11,6 +11,18 @@ from rest_framework.authentication import TokenAuthentication
 
 from .serializers import ClassroomFeedCreateSerializer, ClassroomFeedDetailSerializer, ClassroomFeedListSerializer \
 
+from .models import ClassroomFeed
+
+
+class FeedView(APIView):
+    def get(self, request, **kwargs):
+        query = ClassroomFeed.objects.all()
+        serializer_context = {
+            'request': request,
+        }
+        serializer = ClassroomFeedListSerializer(query, context=serializer_context, many=True)
+
+        return Response(serializer.data)
 
 
 class FeedCreateView(APIView):
