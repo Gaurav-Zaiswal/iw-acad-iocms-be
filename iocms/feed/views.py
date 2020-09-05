@@ -38,3 +38,19 @@ class FeedCreateView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+class ClassroomFeedDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+
+    def get_object(self, pk):
+        try:
+            return ClassroomFeed.objects.get(pk=pk)
+        except ClassroomFeed.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk):
+        query = self.get_object(pk)
+        serializer = ClassroomFeedDetailSerializer(query)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
