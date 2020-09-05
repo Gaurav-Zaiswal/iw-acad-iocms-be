@@ -55,3 +55,12 @@ class ClassroomFeedDetailView(APIView):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+class FeedListView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+
+    def get(self, request):
+        query = ClassroomFeed.objects.all()
+        serializer = ClassroomFeedListSerializer(query, many=True)
+        return serializer
