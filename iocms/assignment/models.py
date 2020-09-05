@@ -16,8 +16,6 @@ class Assignment(models.Model):
 
     def __str__(self) -> str:
         return self.title[0:20]
-    
-
 
 #assignment submit by student
 class AssignmentByStudent(models.Model):
@@ -26,9 +24,3 @@ class AssignmentByStudent(models.Model):
     assignment_answer = models.FileField(upload_to='assignments/', blank=True, null=True)
     assignment_link = models.URLField(blank=True, null = True)
     submisson_date = models.DateTimeField(default=now)
-
-
-
-
-
-    
