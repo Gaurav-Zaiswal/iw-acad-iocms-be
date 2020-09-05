@@ -39,8 +39,9 @@ INSTALLED_APPS = [
 
     'users',
     'classroom',
-
     'assignment',
+    'feed',
+
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
