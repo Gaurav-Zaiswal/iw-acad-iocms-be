@@ -6,6 +6,7 @@ from django.core.exceptions import PermissionDenied
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 
@@ -58,9 +59,17 @@ class ClassroomFeedDetailView(APIView):
 
 class FeedListView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [TokenAuthentication]
 
     def get(self, request):
         query = ClassroomFeed.objects.all()
         serializer = ClassroomFeedListSerializer(query, many=True)
-        return serializer
+        return Response(serializer.data)
+
+
+# class FeedListView(viewsets.ViewSet):
+#     permission_classes = [IsAuthenticated]
+#
+#     def list(self, request):
+#         query = ClassroomFeed.objects.all()
+#         serializer = ClassroomFeedListSerializer(query, many=True)
+#         return serializer
