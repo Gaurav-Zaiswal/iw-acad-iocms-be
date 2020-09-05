@@ -1,4 +1,7 @@
 from django.db import models
+from django.utils.timezone import now
+
+
 from users.models import Teacher
 from assignment.models import Assignment
 from classroom.models import Classroom
@@ -11,6 +14,7 @@ class ClassroomFeed(models.Model):
 
     assignment_title = models.CharField(max_length=150)
     assignment_description = models.CharField(max_length=500)
+    posted_on = models.DateTimeField(default=now)
 
     def __str__(self):
         return f"Feed of {self.classroom_id.class_name} posted by {self.teacher_id.username}"
