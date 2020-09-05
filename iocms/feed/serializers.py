@@ -20,7 +20,7 @@ class ClassroomFeedCreateSerializer(serializers.ModelSerializer):
 class ClassroomFeedListSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClassroomFeed
-        fields = ['id', 'title', 'posted_by', ]
+        fields = ['id', 'title', 'posted_by', 'posted_on']
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
