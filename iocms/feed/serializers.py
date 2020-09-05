@@ -28,7 +28,7 @@ class ClassroomFeedListSerializer(serializers.ModelSerializer):
         return response
 
 
-class ClassroomDetailSerializer(serializers.ModelSerializer):
+class ClassroomFeedDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClassroomFeed
         fields = "__all__"
