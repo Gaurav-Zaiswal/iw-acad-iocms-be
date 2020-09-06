@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from classroom.serializers import ClassroomDetailSerializer 
 from users.models import Teacher, Student
 from users.serializers import TeacherSerializer, StudentSerializer
+from feed.models import ClassroomFeed
 from .models import  Assignment, AssignmentByStudent
 
 
@@ -14,6 +15,18 @@ class AssignmentCreateSerializer(serializers.ModelSerializer):
         model = Assignment
         fields = ['id', "title", "description","class_name", "points", "deadline","teacher"]
     
+    def create(self, validated_data):
+        assignment = Assignment.objects.create(**validated_data)
+        print(assignment )
+        feed = ClassroomFeed(
+            assignment_id = assignment,
+            posted_by = validated_data['teacher'],
+            classroom_id = validated_data['class_name']
+        )
+        feed.save()
+        # feed.classroom_id.add(validated_data['class_name'])
+        return assignment
+
     def to_representation(self, instance):
         response = super().to_representation(instance)
         response["teacher"] = TeacherSerializer(instance.teacher).data 
