@@ -30,9 +30,10 @@ class FeedCreateView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [TokenAuthentication]
 
-    def post(self, request):
+    def post(self, request, class_id):
         serializer = ClassroomFeedCreateSerializer(data=request.data)
-        request.data['posted_by'] = request.user.id
+        request.data['posted_by'] = request.user.id 
+        print(request.data)
         if serializer.is_valid():
             serializer.save()
 
@@ -60,8 +61,9 @@ class ClassroomFeedDetailView(APIView):
 class FeedListView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-        query = ClassroomFeed.objects.all()
+    def get(self, request, class_id):
+
+        query = ClassroomFeed.objects.filter(classroom_id = class_id) 
         serializer = ClassroomFeedListSerializer(query, many=True)
         return Response(serializer.data)
 
@@ -73,3 +75,5 @@ class FeedListView(APIView):
 #         query = ClassroomFeed.objects.all()
 #         serializer = ClassroomFeedListSerializer(query, many=True)
 #         return serializer
+
+

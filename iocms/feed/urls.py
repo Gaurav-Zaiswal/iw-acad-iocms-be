@@ -15,8 +15,8 @@ app_name = 'class'
 urlpatterns = [
 
     path('api/', FeedView.as_view()),
-    path('api/create/', FeedCreateView.as_view()),
-    path('api/list/', FeedListView.as_view()),
+    path('api/<int:class_id>/create/', FeedCreateView.as_view()),
+    path('api/<int:class_id>/list/', FeedListView.as_view()),
     path('api/detail/<int:pk>/', ClassroomFeedDetailView.as_view()),
 ]
 
