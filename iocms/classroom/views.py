@@ -42,7 +42,7 @@ class ClassroomCreateView(APIView):
             raise PermissionDenied('Only teacher can create class')
 # Classroom detail
 class ClassroomDetailView(APIView):
-    # permission_classes = [IsTeacherUser, IsStudentUser]
+    permission_classes = [IsAuthenticated,]
 
     def get_object(self, pk):
         try:
@@ -53,10 +53,10 @@ class ClassroomDetailView(APIView):
     def get(self, request, pk):
         query = self.get_object(pk)
         serializer = ClassroomDetailSerializer(query)
-        if serializer.data["created_by"] == request.user.id:
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            raise PermissionDenied("You do not have permission to view classes of other users.")
+        print(serializer.data['created_by'])
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
+       
 
 # Classroom List
 class ClassroomListView(APIView):
