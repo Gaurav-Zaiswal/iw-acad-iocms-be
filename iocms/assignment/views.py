@@ -49,10 +49,8 @@ class AssignmentCreateView(APIView):
     # permission_classes = [IsTeacherUser]
 
     def post(self, request, class_pk):
-        request.data['teacher'] = request.user.id
-        classroom_id = self.kwargs['class_pk']
-        request.data['class_name'] = 1
-        print('Kwragssss: :: ', self.kwargs) 
+        print('Kwragssss: :: ', request.data) 
+        classroom_id = request.data['class_name']
         serializer = AssignmentCreateSerializer(data = request.data)
 
         # print(request.data)
@@ -64,8 +62,8 @@ class AssignmentCreateView(APIView):
             serializer.save()  
 
             #Part for sending email to notify students about new assignment after it get posted
-            enrolled_students = ClassroomStudents.objects.get(classroom_id =classroom_id )
-            send_email(request, Assignment,enrolled_students,serializer)
+            # enrolled_students = ClassroomStudents.objects.get(classroom_id =classroom_id )
+            # send_email(request, Assignment,enrolled_students,serializer)
             
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

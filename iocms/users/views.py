@@ -1,12 +1,15 @@
 from rest_framework import permissions
 from rest_framework import mixins, viewsets
 from rest_framework import generics
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .models import Student, Teacher, User
 from .serializers import StudentRegistrationSerializer, TeacherRegistrationSerializer, UserSerializer
 
 
-CURRENT_USER = {}
 
 class CreateStudentView(generics.CreateAPIView,
                         viewsets.GenericViewSet):
@@ -39,3 +42,11 @@ class UserView(generics.RetrieveAPIView):
     def get_object(self):
         return self.request.user
 
+
+
+class UserLogoutView(APIView):
+    permission_classes = [IsAuthenticated,]
+
+    def post(self, request):
+        request.user.auth_token.delete()
+        return Response(status=204)

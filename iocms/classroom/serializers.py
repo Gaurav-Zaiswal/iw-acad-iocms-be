@@ -11,7 +11,7 @@ class ClassroomCreateSerializer(serializers.ModelSerializer):
         fields = ['id', 'class_name', 'class_description', 'created_by']
     def to_representation(self, instance):
         response = super().to_representation(instance)
-        response['created_by'] = UserSerializer(instance.created_by).data
+        response['created_by'] = TeacherSerializer(instance.created_by).data
         return response 
     
 class ClassroomDetailSerializer(serializers.ModelSerializer):
@@ -21,7 +21,7 @@ class ClassroomDetailSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
-        response['created_by'] = UserSerializer(instance.created_by).data
+        response['created_by'] = TeacherSerializer(instance.created_by).data
         return response 
 
 class ClassroomListSerializer(serializers.ModelSerializer):

@@ -1,6 +1,6 @@
 from django.db import models
-from users.models import Teacher, Student
 from django.utils.timezone import now
+from users.models import Teacher, Student
 import random, string
 
 
@@ -12,7 +12,6 @@ class Classroom(models.Model):
     creation_date = models.DateTimeField(default=now)
     is_class_code_enabled = models.BooleanField(default=True)
     class_code = models.CharField(max_length=8)
-
     def __str__(self):
         return self.class_name[0:10]
 
