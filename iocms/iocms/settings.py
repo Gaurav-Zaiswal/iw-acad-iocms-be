@@ -25,7 +25,7 @@ SECRET_KEY = 'xen540rl9trux%v$13bd5oufo#+zm_byia#0!t-bx6qv2-0kpa'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["gauravjaiswal.pythonanywhere.com", "aithonclass.heroku.com"]
 
 # Application definition
 
