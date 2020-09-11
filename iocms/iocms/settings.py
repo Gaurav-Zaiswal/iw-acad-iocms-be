@@ -99,7 +99,7 @@ DATABASES = {
         'NAME': os.environ.get("DB_NAME"),
         'USER': os.environ.get("DB_USERNAME"),
         'PASSWORD': os.environ.get("DB_PASSWORD"),
-        'HOST': 'gauravjaiswal.pythonanywhere.com',   # Or an IP Address that your DB is hosted on
+        'HOST': os.environ.get("DB_HOST"),   # Or an IP Address that your DB is hosted on
         'PORT': '',
     }
 }
