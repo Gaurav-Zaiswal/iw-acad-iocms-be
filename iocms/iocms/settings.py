@@ -63,7 +63,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'iocms.urls'
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000'
+    *
 ]
 
 TEMPLATES = [
