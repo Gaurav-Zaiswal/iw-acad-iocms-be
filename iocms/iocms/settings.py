@@ -107,11 +107,11 @@ WSGI_APPLICATION = 'iocms.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': django.db.backends.mysql, 
+        'ENGINE': "django.db.backends.mysql", 
         'NAME': 'gauravjaiswal$aithon',
-        'USER': gauravjaiswal,
+        'USER': "gauravjaiswal",
         'PASSWORD': "Ap(8&bh??",
-        'HOST': gauravjaiswal.mysql.pythonanywhere-services.com,   # Or an IP Address that your DB is hosted on
+        'HOST': "gauravjaiswal.mysql.pythonanywhere-services.com",   # Or an IP Address that your DB is hosted on
         'PORT': '',
     }
 }
