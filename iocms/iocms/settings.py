@@ -20,8 +20,8 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
-SECRET_KEY ="xen540rl9trux%v$13bd5oufo#+zm_byia#0!t-bx6qv2-0kpa"
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
@@ -96,27 +96,17 @@ WSGI_APPLICATION = 'iocms.wsgi.application'
 #     }
 # }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': os.environ.get("DB_ENGINE"), 
-#         'NAME': os.environ.get("DB_NAME"),
-#         'USER': os.environ.get("DB_USERNAME"),
-#         'PASSWORD': os.environ.get("DB_PASSWORD"),
-#         'HOST': os.environ.get("DB_HOST"),   # Or an IP Address that your DB is hosted on
-#         'PORT': '',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': "django.db.backends.mysql", 
-        'NAME': 'gauravjaiswal$aithon',
-        'USER': "gauravjaiswal",
-        'PASSWORD': "Ap(8&bh??",
-        'HOST': "gauravjaiswal.mysql.pythonanywhere-services.com",   # Or an IP Address that your DB is hosted on
+        'ENGINE': os.environ.get("DB_ENGINE"), 
+        'NAME': os.environ.get("DB_NAME"),
+        'USER': os.environ.get("DB_USERNAME"),
+        'PASSWORD': os.environ.get("DB_PASSWORD"),
+        'HOST': os.environ.get("DB_HOST"),   # Or an IP Address that your DB is hosted on
         'PORT': '',
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -176,16 +166,11 @@ REST_FRAMEWORK = {
 }
 
 
-# EMAIL_BACKEND= os.environ.get("EMAIL_BACKEND")
-# EMAIL_HOST = os.environ.get("EMAIL_HOST")
-# EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS")
-# EMAIL_PORT = os.environ.get("EMAIL_PORT")
-# EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
-# EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
-EMAIL_BACKEND="django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST="smtp.gmail.com"
-EMAIL_USE_TLS="True"
-EMAIL_PORT="587"
-EMAIL_HOST_USER="noreplay.iocms@gmail.com"
-EMAIL_HOST_PASSWORD="Xg27!a@5"
+EMAIL_BACKEND= os.environ.get("EMAIL_BACKEND")
+EMAIL_HOST = os.environ.get("EMAIL_HOST")
+EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS")
+EMAIL_PORT = os.environ.get("EMAIL_PORT")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+
 
