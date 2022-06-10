@@ -9,13 +9,15 @@ class Assignment(models.Model):
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     class_name = models.ForeignKey(Classroom, on_delete=models.CASCADE)
     title = models.CharField(max_length=150)
-    description = models.TextField(blank = True, null = True)
+    description = models.TextField(blank=True, null=True)
+    paper = models.FileField(upload_to='assignment/')
     points = models.IntegerField()
     creation_date = models.DateTimeField(default=now)
     deadline = models.DateTimeField()
 
     def __str__(self) -> str:
         return self.title[0:20]
+
 
 #assignment submit by student
 class AssignmentByStudent(models.Model):

@@ -20,7 +20,7 @@ from .serializers import (AssignmentCreateSerializer,
                             AssignmentListSerializer, 
                             AssignmentDetailSerializer,
                             AssignmentSubmitSerializer)
-from .send_email import send_email
+# from .send_email import send_email
 
 # Create your views here.
 
@@ -49,22 +49,12 @@ class AssignmentCreateView(APIView):
     # permission_classes = [IsTeacherUser]
 
     def post(self, request, class_pk):
-        print('Kwragssss: :: ', request.data) 
-        classroom_id = request.data['class_name']
+        request.data['teacher'] = request.user.id
+        request.data['class_name'] = class_pk
+
         serializer = AssignmentCreateSerializer(data = request.data)
-
-        # print(request.data)
         if serializer.is_valid():
-            # user = get_object_or_404(User, id = request.user.id)
-            # print(user.email)
-            # serializer.validated_data['teacher'] = request.user.id
-            print(serializer.validated_data)
-            serializer.save()  
-
-            #Part for sending email to notify students about new assignment after it get posted
-            enrolled_students = ClassroomStudents.objects.get(classroom_id =classroom_id )
-            send_email(request, Assignment,enrolled_students,serializer)
-            
+            serializer.save()             
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -114,7 +104,9 @@ class SubbmittedAssignmentView(APIView):
 
     def get(self,request, class_pk):
         if request.user.is_teacher:
-            query = AssignmentByStudent.objects.filter(assignment_details__teacher= 1)
+            # print()
+            # query = AssignmentByStudent.objects.filter(assignment_details__teacher= 1)   #original query
+            query = AssignmentByStudent.objects.filter(assignment_details__class_name__id=class_pk) # updated query
             serializer = AssignmentSubmitSerializer(query, many = True)
 
             return Response(serializer.data, status=status.HTTP_200_OK)

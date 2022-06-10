@@ -6,30 +6,19 @@ from classroom.serializers import ClassroomDetailSerializer
 from users.models import Teacher, Student
 from users.serializers import TeacherSerializer, StudentSerializer
 from feed.models import ClassroomFeed
-from .models import  Assignment, AssignmentByStudent
+from .models import Assignment, AssignmentByStudent
 
 
 
-class AssignmentCreateSerializer(serializers.ModelSerializer):    
+class AssignmentCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Assignment
-        fields = ['id', "title", "description","class_name", "points", "deadline","teacher"]
-    
-    def create(self, validated_data):
-        assignment = Assignment.objects.create(**validated_data)
-        print(assignment )
-        feed = ClassroomFeed(
-            assignment_id = assignment,
-            posted_by = validated_data['teacher'],
-            classroom_id = validated_data['class_name']
-        )
-        feed.save()
-        # feed.classroom_id.add(validated_data['class_name'])
-        return assignment
+        fields = ['id', "title", "description","class_name", "points", "deadline","teacher", "paper"]
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
-        response["teacher"] = TeacherSerializer(instance.teacher).data 
+        response["teacher"] = TeacherSerializer(instance.teacher).data
+        response['class_name'] = ClassroomDetailSerializer(instance.class_name).data
         return response
         
 

@@ -20,14 +20,15 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
-
+# SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
+SECRET_KEY = 'agv=$d+=6^b%y#t9*yq@e$4*z3!aumf8lduq2rp)j(-=+8m%3e'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
 DEBUG = False
 
-ALLOWED_HOSTS = ["gauravjaiswal.pythonanywhere.com", "aithonclass.heroku.com"]
+# ALLOWED_HOSTS = ["gauravjaiswal.pythonanywhere.com", "aithonclass.heroku.com", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -89,23 +90,23 @@ WSGI_APPLICATION = 'iocms.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': str(BASE_DIR / 'db.sqlite3'),
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get("DB_ENGINE"), 
-        'NAME': os.environ.get("DB_NAME"),
-        'USER': os.environ.get("DB_USERNAME"),
-        'PASSWORD': os.environ.get("DB_PASSWORD"),
-        'HOST': os.environ.get("DB_HOST"),   # Or an IP Address that your DB is hosted on
-        'PORT': '',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': str(BASE_DIR / 'db.sqlite3'),
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': os.environ.get("DB_ENGINE"),
+#         'NAME': os.environ.get("DB_NAME"),
+#         'USER': os.environ.get("DB_USERNAME"),
+#         'PASSWORD': os.environ.get("DB_PASSWORD"),
+#         'HOST': os.environ.get("DB_HOST"),   # Or an IP Address that your DB is hosted on
+#         'PORT': '',
+#     }
+# }
 
 
 # Password validation
@@ -164,13 +165,18 @@ REST_FRAMEWORK = {
     ],
     
 }
-
-
-EMAIL_BACKEND= os.environ.get("EMAIL_BACKEND")
-EMAIL_HOST = os.environ.get("EMAIL_HOST")
-EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS")
-EMAIL_PORT = os.environ.get("EMAIL_PORT")
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+EMAIL_BACKEND="django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST="smtp.gmail.com"
+EMAIL_USE_TLS="True"
+EMAIL_PORT=587
+EMAIL_HOST_USER="noreplay.iocms@gmail.com"
+EMAIL_HOST_PASSWORD="Xg27!a@5"
+#
+# EMAIL_BACKEND= os.environ.get("EMAIL_BACKEND")
+# EMAIL_HOST = os.environ.get("EMAIL_HOST")
+# EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS")
+# EMAIL_PORT = os.environ.get("EMAIL_PORT")
+# EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+# EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 
 
