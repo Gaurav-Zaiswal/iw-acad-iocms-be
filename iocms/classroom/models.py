@@ -12,6 +12,11 @@ class Classroom(models.Model):
     creation_date = models.DateTimeField(default=now)
     is_class_code_enabled = models.BooleanField(default=True)
     class_code = models.CharField(max_length=8)
+
+    class Meta:
+        ordering = ['creation_date']
+        verbose_name_plural = 'classrooms'
+
     def __str__(self):
         return self.class_name[0:10]
 
@@ -19,13 +24,30 @@ class Classroom(models.Model):
         self.class_code = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
         super(Classroom, self).save(*args, **kwargs)
 
-    class Meta:
-        ordering = ['creation_date']
 
-
-class ClassroomStudents(models.Model):
+class ClassroomStudent(models.Model):
     classroom_id = models.OneToOneField(Classroom, on_delete=models.CASCADE)
     enrolled_student_id = models.ManyToManyField(Student, blank=True)
 
     def __str__(self):
         return self.classroom_id.class_name[0:10]
+
+    class Meta:
+        ordering = ['creation_date']
+        verbose_name_plural = 'classroom_students'
+
+
+class Rating(models.Model):
+    classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
+    rated_by = models.OneToOneField(Student, on_delete=models.CASCADE)
+    rating = models.FloatField()
+    comment = models.CharField(max_length=200, blank=True)
+
+    def __str__(self):
+        return f"{self.rated_by.student} | {self.classroom.name}"
+
+    class Meta:
+        verbose_name_plural = 'ratings'
+
+    def save(self):
+        self.rating = round(self.rating, 2)
