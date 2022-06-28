@@ -1,7 +1,9 @@
+import random, string
+
 from django.db import models
 from django.utils.timezone import now
+
 from users.models import Teacher, Student
-import random, string
 
 
 class Classroom(models.Model):
@@ -18,14 +20,14 @@ class Classroom(models.Model):
         verbose_name_plural = 'classrooms'
 
     def __str__(self):
-        return self.class_name[0:10]
+        return self.class_name
 
     def save(self, *args, **kwargs):
         self.class_code = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
         super(Classroom, self).save(*args, **kwargs)
 
 
-class ClassroomStudent(models.Model):
+class ClassroomStudents(models.Model):
     classroom_id = models.OneToOneField(Classroom, on_delete=models.CASCADE)
     enrolled_student_id = models.ManyToManyField(Student, blank=True)
 
@@ -33,7 +35,6 @@ class ClassroomStudent(models.Model):
         return self.classroom_id.class_name[0:10]
 
     class Meta:
-        ordering = ['creation_date']
         verbose_name_plural = 'classroom_students'
 
 
@@ -50,4 +51,4 @@ class Rating(models.Model):
         verbose_name_plural = 'ratings'
 
     def save(self):
-        self.rating = round(self.rating, 2)
+        self.rating = round(self.rating, 1)

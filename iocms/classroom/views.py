@@ -27,7 +27,7 @@ class ClassroomView(APIView):
 
 
 class ClassroomCreateView(APIView):
-    permission_classes = [IsAuthenticated,] 
+    permission_classes = [IsAuthenticated,]
 
     def post(self, request):
         if request.user.is_teacher:
