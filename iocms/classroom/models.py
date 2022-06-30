@@ -39,8 +39,8 @@ class ClassroomStudents(models.Model):
 
 
 class Rating(models.Model):
-    classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
-    rated_by = models.ForeignKey(Student, on_delete=models.CASCADE)
+    classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, related_name='classroom')
+    rated_by = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='student')
     rating = models.FloatField()
     comment = models.CharField(max_length=200, blank=True)
 

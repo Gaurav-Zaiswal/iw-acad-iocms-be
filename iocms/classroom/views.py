@@ -1,4 +1,7 @@
-from django.http import Http404
+import json
+
+from django.db.models import Avg
+from django.http import Http404, JsonResponse
 from django.core.exceptions import PermissionDenied
 
 from rest_framework import status
@@ -9,7 +12,7 @@ from rest_framework.permissions import IsAuthenticated
 from users.permissions import IsTeacherUser, IsStudentUser
 from users.models import User
 
-from .models import Classroom, ClassroomStudents
+from .models import Classroom, ClassroomStudents, Rating
 from .serializers import ClassroomCreateSerializer, ClassroomDetailSerializer, ClassroomListSerializer, \
     ClassroomAddSerializer
 
@@ -120,3 +123,10 @@ class ClassroomAddView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             raise PermissionDenied("You do not have permission to view classes of other users.")
+
+
+class Top10Classrooms(APIView):
+
+    def get(self, request):
+        qs = Rating.objects.values('classroom').annotate(avg_rating=Avg('rating'))[:10]
+        return JsonResponse()

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework import response
 
-from .models import Classroom, ClassroomStudents
+from .models import Classroom, ClassroomStudents, Rating
 from users.serializers import UserSerializer, TeacherSerializer, StudentSerializer
 
 
@@ -9,10 +9,12 @@ class ClassroomCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Classroom
         fields = ['id', 'class_name', 'class_description', 'created_by']
+
     def to_representation(self, instance):
         response = super().to_representation(instance)
         response['created_by'] = TeacherSerializer(instance.created_by).data
-        return response 
+        return response
+
     
 class ClassroomDetailSerializer(serializers.ModelSerializer):
     class Meta:
@@ -21,8 +23,10 @@ class ClassroomDetailSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
+
         response['created_by'] = TeacherSerializer(instance.created_by).data
         return response 
+
 
 class ClassroomListSerializer(serializers.ModelSerializer):
     class Meta:
@@ -33,6 +37,7 @@ class ClassroomListSerializer(serializers.ModelSerializer):
         response = super().to_representation(instance)
         response['created_by'] = TeacherSerializer(instance.created_by).data
         return response 
+
 
 class ClassroomAddSerializer(serializers.ModelSerializer):
     class Meta:
@@ -45,6 +50,11 @@ class ClassroomAddSerializer(serializers.ModelSerializer):
         return response 
 
 
+class RatingSerializer(serializers.ModelSerializer):
+    classroom = serializers.StringRelatedField(many=True, read_only=True)
+    student = serializers.StringRelatedField(many=True, read_only=True)
 
-
+    class Meta:
+        model = Rating
+        fields = "__all__"
 
