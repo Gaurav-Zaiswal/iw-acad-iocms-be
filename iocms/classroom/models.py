@@ -40,12 +40,12 @@ class ClassroomStudents(models.Model):
 
 class Rating(models.Model):
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
-    rated_by = models.OneToOneField(Student, on_delete=models.CASCADE)
+    rated_by = models.ForeignKey(Student, on_delete=models.CASCADE)
     rating = models.FloatField()
     comment = models.CharField(max_length=200, blank=True)
 
     def __str__(self):
-        return f"{self.rated_by.student} | {self.classroom.name}"
+        return f"{self.rated_by}: {self.classroom}: {self.rating}"
 
     class Meta:
         verbose_name_plural = 'ratings'
