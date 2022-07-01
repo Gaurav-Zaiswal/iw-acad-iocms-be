@@ -1,4 +1,4 @@
-class CustomPageNumberPaginationMixing(object):
+class PaginationMixing(object):
     """
     API views does not call Pagination classes by default. Therefore, implementing the custom paginator mixing
     resources: (https://stackoverflow.com/a/45670649/10711551),

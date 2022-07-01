@@ -50,11 +50,31 @@ class ClassroomAddSerializer(serializers.ModelSerializer):
         return response 
 
 
-class RatingSerializer(serializers.ModelSerializer):
-    classroom = serializers.StringRelatedField(many=True, read_only=True)
-    student = serializers.StringRelatedField(many=True, read_only=True)
+# class RatingSerializer(serializers.ModelSerializer):
+#     classroom = serializers.StringRelatedField(many=True, read_only=True)
+#     student = serializers.StringRelatedField(many=True, read_only=True)
+#     rated_by = serializers.StringRelatedField(many=True, read_only=True)
+#
+#     class Meta:
+#         model = Rating
+#         fields = "__all__"
+#
+#     def to_representation(self, instance):
+#         response = super().to_representation(instance)
+#         response['classroom_repr'] = ClassroomDetailSerializer(instance.created_by).data
+#         # response['classroom_id'] = ClassroomDetailSerializer(instance.classroom).data
+#         return response
 
-    class Meta:
-        model = Rating
-        fields = "__all__"
+
+class TopRatedClassSerializer(serializers.Serializer):
+    """
+    Serialize Top Rating Classrooms, but give different key names than that are defined in queryset.
+    e.g. queryset have classroom__id defined but we want class_id in API response.
+    """
+
+    class_id = serializers.IntegerField(source='classroom__id')
+    class_name = serializers.CharField(source='classroom__class_name')
+    class_description = serializers.CharField(source='classroom__class_description')
+    instructor_id = serializers.IntegerField(source='classroom__created_by')
+    avg_rating = serializers.FloatField()  # keep 'avg_rating' same
 
