@@ -21,14 +21,6 @@ class ClassroomDetailSerializer(serializers.ModelSerializer):
         model = Classroom
         fields = "__all__"
 
-    # def to_representation(self, instance):
-    #     """
-    #     add additional data to serializer
-    #     """
-    #     representation = super().to_representation(instance)
-    #     representation['created_by'] = TeacherSerializer(instance.created_by).data   # add teacher's details
-    #     return representation
-
     def to_representation(self, instance):
         """
         add additional data to serializer
@@ -38,6 +30,7 @@ class ClassroomDetailSerializer(serializers.ModelSerializer):
         representation['no_of_ratings'] = self.context['no_of_ratings']  # add data that come via context from view
         representation['avg_rating'] = self.context['avg_rating']
         return representation
+
 
 class ClassroomListSerializer(serializers.ModelSerializer):
     class Meta:

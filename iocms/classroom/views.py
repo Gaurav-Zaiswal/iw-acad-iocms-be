@@ -46,6 +46,8 @@ class ClassroomCreateView(APIView):
 
 # Classroom detail
 class ClassroomDetailView(RetrieveAPIView):
+    # used generic API so that I could utilize get_serializer_context() method
+    # to add additional data in context
     queryset = Classroom.objects.all()  # need to retrieve one object, but still have to fetch all objects, why?!
     serializer_class = ClassroomDetailSerializer
 
