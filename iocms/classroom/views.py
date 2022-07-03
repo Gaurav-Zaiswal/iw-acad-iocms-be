@@ -5,6 +5,7 @@ from django.core.exceptions import PermissionDenied
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated 
 
 # from users.permissions import IsTeacherUser, IsStudentUser
@@ -44,22 +45,24 @@ class ClassroomCreateView(APIView):
 
 
 # Classroom detail
-class ClassroomDetailView(APIView):
-    permission_classes = [IsAuthenticated,]
+class ClassroomDetailView(RetrieveAPIView):
+    queryset = Classroom.objects.all()  # need to retrieve one object, but still have to fetch all objects, why?!
+    serializer_class = ClassroomDetailSerializer
 
-    def get_object(self, pk):
-        try:
-            return Classroom.objects.get(pk=pk)
-        except Classroom.DoesNotExist:
-            raise Http404
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        clsrm_obj = self.get_object()  # get the classroom instance
+        no_of_ratings = clsrm_obj.classroom.count()  # here classroom is related_name field
+        avg_rating = clsrm_obj.classroom.values('rating').aggregate(avg_rating=Avg('rating'))
+        # add two more k-v into context dict
+        context.update(
+            {
+                'no_of_ratings': no_of_ratings,
+                'avg_rating': avg_rating
+            }
+        )
+        return context
 
-    def get(self, request, pk):
-        query = self.get_object(pk)
-        serializer = ClassroomDetailSerializer(query)
-        # print(serializer.data['created_by'])
-        
-        return Response(serializer.data, status=status.HTTP_200_OK)
-       
 
 # Classroom List
 class ClassroomListView(APIView, PaginationMixing):

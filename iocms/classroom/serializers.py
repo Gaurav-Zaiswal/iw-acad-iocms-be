@@ -21,12 +21,23 @@ class ClassroomDetailSerializer(serializers.ModelSerializer):
         model = Classroom
         fields = "__all__"
 
+    # def to_representation(self, instance):
+    #     """
+    #     add additional data to serializer
+    #     """
+    #     representation = super().to_representation(instance)
+    #     representation['created_by'] = TeacherSerializer(instance.created_by).data   # add teacher's details
+    #     return representation
+
     def to_representation(self, instance):
-        response = super().to_representation(instance)
-
-        response['created_by'] = TeacherSerializer(instance.created_by).data
-        return response 
-
+        """
+        add additional data to serializer
+        """
+        representation = super().to_representation(instance)
+        representation['created_by'] = TeacherSerializer(instance.created_by).data   # add teacher's details
+        representation['no_of_ratings'] = self.context['no_of_ratings']  # add data that come via context from view
+        representation['avg_rating'] = self.context['avg_rating']
+        return representation
 
 class ClassroomListSerializer(serializers.ModelSerializer):
     class Meta:
@@ -50,21 +61,6 @@ class ClassroomAddSerializer(serializers.ModelSerializer):
         return response 
 
 
-# class RatingSerializer(serializers.ModelSerializer):
-#     classroom = serializers.StringRelatedField(many=True, read_only=True)
-#     student = serializers.StringRelatedField(many=True, read_only=True)
-#     rated_by = serializers.StringRelatedField(many=True, read_only=True)
-#
-#     class Meta:
-#         model = Rating
-#         fields = "__all__"
-#
-#     def to_representation(self, instance):
-#         response = super().to_representation(instance)
-#         response['classroom_repr'] = ClassroomDetailSerializer(instance.created_by).data
-#         # response['classroom_id'] = ClassroomDetailSerializer(instance.classroom).data
-#         return response
-
 
 class TopRatedClassSerializer(serializers.Serializer):
     """
@@ -77,4 +73,3 @@ class TopRatedClassSerializer(serializers.Serializer):
     class_description = serializers.CharField(source='classroom__class_description')
     instructor_id = serializers.IntegerField(source='classroom__created_by')
     avg_rating = serializers.FloatField()  # keep 'avg_rating' same
-
