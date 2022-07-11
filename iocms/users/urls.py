@@ -17,8 +17,7 @@ router.register('api/teacher-register', CreateTeacherView, basename='TeacherMode
 urlpatterns = [
     path('', include(router.urls)),
     path('api/login/', auth_views.obtain_auth_token, name='login'),
-    path('api/user-info', UserView.as_view(), name = 'user-info'),
-    path('api/logout/', UserLogoutView.as_view(), name = "user-logout")
- 
+    path('api/user-info/', UserView.as_view(), name = 'user-info'),
+    path('api/logout/', UserLogoutView.as_view(), name = "user-logout") 
 ]
  

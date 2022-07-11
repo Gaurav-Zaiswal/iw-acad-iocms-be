@@ -129,8 +129,8 @@ blog-env/
 dmypy.json
 
 # Pyre type checker
+#################################### EXTRAAAAAAAAAAAAAAAAAAAA
 .pyre/
 .idea/
-
-env.py
 fixtures/
+env.py

@@ -1,33 +1,35 @@
-from django.http import Http404
+from django.db.models import Avg
+from django.http import Http404, JsonResponse
 from django.core.exceptions import PermissionDenied
 
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated 
 
-from users.permissions import IsTeacherUser, IsStudentUser
+# from users.permissions import IsTeacherUser, IsStudentUser
+from custom_mixing import PaginationMixing
+from custom_pagination import CustomPageNumberPagination
 from users.models import User
 
-from .models import Classroom, ClassroomStudents
+from .models import Classroom, ClassroomStudents, Rating
 from .serializers import ClassroomCreateSerializer, ClassroomDetailSerializer, ClassroomListSerializer, \
-    ClassroomAddSerializer
+    ClassroomAddSerializer, TopRatedClassSerializer
 
 
-class ClassroomView(APIView):
+class ClassroomView(APIView, PaginationMixing):
+    pagination_class = CustomPageNumberPagination
 
     def get(self, request, **kwargs):
         query = Classroom.objects.all()
-        serializer_context = {
-            'request': request,
-        }
-        serializer = ClassroomListSerializer(query, context=serializer_context, many=True)
-
-        return Response(serializer.data)
+        page = self.paginate_queryset(query)
+        serializer = ClassroomListSerializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
 
 class ClassroomCreateView(APIView):
-    permission_classes = [IsAuthenticated,] 
+    permission_classes = [IsAuthenticated,]
 
     def post(self, request):
         if request.user.is_teacher:
@@ -40,41 +42,49 @@ class ClassroomCreateView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             raise PermissionDenied('Only teacher can create class')
+
+
 # Classroom detail
-class ClassroomDetailView(APIView):
-    permission_classes = [IsAuthenticated,]
+class ClassroomDetailView(RetrieveAPIView):
+    # used generic API so that I could utilize get_serializer_context() method
+    # to add additional data in context
+    queryset = Classroom.objects.all()  # need to retrieve one object, but still have to fetch all objects, why?!
+    serializer_class = ClassroomDetailSerializer
 
-    def get_object(self, pk):
-        try:
-            return Classroom.objects.get(pk=pk)
-        except Classroom.DoesNotExist:
-            raise Http404
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        clsrm_obj = self.get_object()  # get the classroom instance
+        no_of_ratings = clsrm_obj.classroom.count()  # here classroom is related_name field
+        avg_rating = clsrm_obj.classroom.values('rating').aggregate(avg_rating=Avg('rating'))
+        # add two more k-v into context dict
+        context.update(
+            {
+                'no_of_ratings': no_of_ratings,
+                'avg_rating': avg_rating
+            }
+        )
+        return context
 
-    def get(self, request, pk):
-        query = self.get_object(pk)
-        serializer = ClassroomDetailSerializer(query)
-        print(serializer.data['created_by'])
-        
-        return Response(serializer.data, status=status.HTTP_200_OK)
-       
 
 # Classroom List
-class ClassroomListView(APIView):
+class ClassroomListView(APIView, PaginationMixing):
     permission_classes = [IsAuthenticated]
+    pagination_class = CustomPageNumberPagination
 
     def get(self, request):
         user_id = request.user.id
-        
-        user = User.objects.get(id = user_id) 
+        user = User.objects.get(id=user_id)
         if user.is_teacher:
             query = Classroom.objects.filter(created_by_id=user_id)
-            serializer = ClassroomListSerializer(query, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            page = self.paginate_queryset(query)
+            # print(page)
+            serializer = ClassroomListSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)  # from PaginationMixing
+            # return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             # query for list of class where student is enrolled
             enrolled_student = ClassroomStudents.objects.filter(enrolled_student_id__in=[user.id])
-            # example O/P from above <QuerySet [<ClassroomStudents: class12>, <ClassroomStudents: class1>,
-            # <ClassroomStudents: New class >]>
+            print(enrolled_student)
             # query to extract Classroom model fields by passing classroom_id
             student_enrolled_class_list = [classroom.classroom_id for classroom in enrolled_student]
             serializer = ClassroomListSerializer(student_enrolled_class_list, many=True)
@@ -120,3 +130,18 @@ class ClassroomAddView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             raise PermissionDenied("You do not have permission to view classes of other users.")
+
+
+class TopRatedClassrooms(APIView, PaginationMixing):
+    """
+    returns top rated classrooms on the basis of average rating given by students
+    """
+    pagination_class = CustomPageNumberPagination
+
+    def get(self, request):
+        qs = Rating.objects.select_related('classroom').values(
+            'classroom__class_name', 'classroom__id', 'classroom__class_description', 'classroom__created_by').annotate(
+            avg_rating=Avg('rating'))
+        page = self.paginate_queryset(qs)
+        serializer = TopRatedClassSerializer(page, many=True)
+        return self.get_paginated_response(serializer.data)  # from PaginatedMixing

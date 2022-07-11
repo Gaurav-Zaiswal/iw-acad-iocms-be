@@ -1,0 +1,6 @@
+[client]
+database = aithondb
+user = aithondba
+password = zXbli3RsPUfd26tp
+host = localhost
+default-character-set = utf8

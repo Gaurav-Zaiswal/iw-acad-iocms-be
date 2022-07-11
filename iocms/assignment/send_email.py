@@ -16,7 +16,7 @@ def send_email(request, assignemnt_model, student_model, serializer):
     for student in student_model.enrolled_student_id.all():
         student_email_list.append(student.user.email)
     
-    print(student_email_list)
+    # print(student_email_list)
         
     email_subject = f'New assignment posted by {new_assignment_data.teacher}'
     current_site = get_current_site(request)
@@ -30,8 +30,9 @@ def send_email(request, assignemnt_model, student_model, serializer):
     message = strip_tags(html_message)
     send_mail(subject=email_subject, 
               message=message,
-              from_email=EMAIL_HOST_USER, 
-              recipient_list=student_email_list, 
+              from_email=EMAIL_HOST_USER,
+              # from_email="jr.gaurav2015@gmail.com",
+              recipient_list=student_email_list,
               html_message= html_message,
               fail_silently=False
             )

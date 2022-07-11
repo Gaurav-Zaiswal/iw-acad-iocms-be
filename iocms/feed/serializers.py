@@ -5,6 +5,7 @@ from .models import ClassroomFeed
 from users.serializers import UserSerializer, TeacherSerializer, StudentSerializer
 from assignment.serializers import AssignmentDetailSerializer
 
+
 class ClassroomFeedCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClassroomFeed

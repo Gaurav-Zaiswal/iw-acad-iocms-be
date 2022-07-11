@@ -4,7 +4,7 @@ from .views import ( FeedView,
                      FeedCreateView,
                      FeedListView,
                      ClassroomFeedDetailView )
-from rest_framework.routers import DefaultRouter
+# from rest_framework.routers import DefaultRouter
 
 
 app_name = 'class'
