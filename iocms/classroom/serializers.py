@@ -66,3 +66,17 @@ class TopRatedClassSerializer(serializers.Serializer):
     class_description = serializers.CharField(source='classroom__class_description')
     instructor_id = serializers.IntegerField(source='classroom__created_by')
     avg_rating = serializers.FloatField()  # keep 'avg_rating' same
+
+
+class ClassroomListElasticSerializer(serializers.ModelSerializer):
+    """
+    serializer for elastic search to list search results
+    """
+    class Meta:
+        model = Classroom
+        fields = ['id', 'class_name', 'class_description'] 
+
+    # def to_representation(self, instance):
+    #     response = super().to_representation(instance)
+    #     response['created_by'] = TeacherSerializer(instance.created_by).data
+    #     return response 

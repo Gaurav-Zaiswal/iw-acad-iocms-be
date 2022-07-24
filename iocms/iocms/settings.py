@@ -32,11 +32,13 @@ INSTALLED_APPS = [
     'classroom',
     'assignment',
     'feed',
+    'search',
 
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
     'storages',
+     'django_elasticsearch_dsl'
 ]
 
 MIDDLEWARE = [
@@ -143,7 +145,8 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
-    
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 5
 }
 
 # DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
@@ -158,3 +161,12 @@ AZURE_CUSTOM_DOMAIN = f'{AZURE_ACCOUNT_NAME}.blob.core.windows.net'
 
 STATIC_LOCATION = 'static'
 STATIC_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
+
+# Elastic search configs
+# connect to instance of elasticsearch ALREADY RUNNING at localhost:9200
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'http://127.0.0.1:9200',
+        'requestTimeout': 60000 
+    },
+}
