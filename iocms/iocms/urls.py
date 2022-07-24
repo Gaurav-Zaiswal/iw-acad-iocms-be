@@ -11,5 +11,5 @@ urlpatterns = [
     path('feed/', include('feed.urls', namespace='feed')),
     path('users/', include('users.urls'), name="user-register")
 ]
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# if settings.DEBUG:
+#     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

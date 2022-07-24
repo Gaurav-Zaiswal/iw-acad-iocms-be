@@ -5,9 +5,10 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import status
 
 from .models import Student, Teacher, User
-from .serializers import StudentRegistrationSerializer, TeacherRegistrationSerializer, UserSerializer
+from .serializers import ProfileSerializer, StudentRegistrationSerializer, TeacherRegistrationSerializer, UserSerializer
 
 
 
@@ -50,3 +51,23 @@ class UserLogoutView(APIView):
     def post(self, request):
         request.user.auth_token.delete()
         return Response(status=204)
+
+
+class UploadImage(APIView):
+    permission_classes = [IsAuthenticated,]
+
+    def post(self, request):
+        # request.data['student'] = request.user.id 
+        # assignment_file = request.FILES['file'] 
+        print(request.data)
+        try:
+            request.data['image'] = request.FILES['file'] 
+            serializer = ProfileSerializer(data = request.data)
+        except: 
+            serializer = ProfileSerializer(data = request.data)
+ 
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status = status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)

@@ -52,6 +52,3 @@ class AssignmentSubmitSerializer(serializers.ModelSerializer):
         response['assignment_details'] = AssignmentDetailSerializer(instance.assignment_details).data
         response['student'] = StudentSerializer(instance.student).data
         return response
-
-
-

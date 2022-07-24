@@ -1,4 +1,7 @@
-from .models import User
+from dataclasses import field
+from msilib.schema import Class
+from pyexpat import model
+from .models import Profile, User
 
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator  # makes sure email, username are unique
@@ -109,3 +112,11 @@ class StudentSerializer(serializers.ModelSerializer):
         response = super().to_representation(instance)
         response["user"] = UserSerializer(instance.user).data
         return response 
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ['image']
+
+        
