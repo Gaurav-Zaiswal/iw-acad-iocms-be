@@ -1,12 +1,17 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from elasticsearch_dsl import Q
+from msrest import Serializer
+from rest_framework.response import Response
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.views import APIView
+from rest_framework import status
 
 # from classroom.serializers import ClassroomSerializer
-from classroom.serializers import ClassroomListElasticSerializer
+from classroom.serializers import ClassroomListElasticSerializer, RecommendationListSerializer
 from classroom.documents import ClassroomDocument
+
+from .recommed import ComputeRecommendation
 
 
 # Create your views here.
@@ -35,4 +40,11 @@ class SearchClassroom(APIView, LimitOffsetPagination):
             serializer = self.serializer_class(results, many=True)
             return self.get_paginated_response(serializer.data)
         except Exception as e:
-            return HttpResponse(e, status=500)
+            return HttpResponse(e, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class RecomendationView(APIView):
+    def get(self, request):
+        recommended_classes_dict = ComputeRecommendation.generateRecommendation(request)
+        serializer = RecommendationListSerializer(recommended_classes_dict, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

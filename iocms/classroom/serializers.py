@@ -1,3 +1,4 @@
+from typing_extensions import Required
 from rest_framework import serializers
 from rest_framework import response
 
@@ -80,3 +81,12 @@ class ClassroomListElasticSerializer(serializers.ModelSerializer):
     #     response = super().to_representation(instance)
     #     response['created_by'] = TeacherSerializer(instance.created_by).data
     #     return response 
+
+
+class RecommendationListSerializer(serializers.Serializer):
+    """
+    serializer for recommendation objects.
+    """
+    classroom_id = serializers.IntegerField()
+    class_description = serializers.CharField(max_length=500, required=False)
+    class_name = serializers.CharField(max_length=150)
