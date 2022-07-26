@@ -50,5 +50,6 @@ class Rating(models.Model):
     class Meta:
         verbose_name_plural = 'ratings'
 
-    def save(self):
+    def save(self, *args, **kwargs):
+        super(Rating, self).save(*args, **kwargs)
         self.rating = round(self.rating, 1)

@@ -9,26 +9,23 @@ class ComputeRecommendation:
     def generateRecommendation(request):
         classroom=Classroom.objects.values_list('id', 'class_name', 'class_description')
         rating=Rating.objects.values_list('classroom', 'rated_by', 'rating')
-        x=[] 
-        y=[]
-        A=[]
-        B=[]
+        # x=[] 
+        # y=[]
+        # A=[]
+        # B=[]
         C=[]
         D=[]
-        ###############Movie Data Frames##############
-        ##############################################
+
         # for item in classroom:
         #     x=[item.id,item.title,item.movieduration,item.image.url,item.genres] 
         #     y+=[x]
         # movies_df = pd.DataFrame(y,columns=['movieId','title','movieduration','image','genres'])
-        classroom_df = pd.DataFrame(classroom, columns=['classroom_id','classroom_name','class_description'])
+        classroom_df = pd.DataFrame(classroom, columns=['classroom_id','classroom_name','classroom_description'])
 
-        ################Rating Data Frames#############
-        ###############################################
         # for item in rating:
         #     A=[item.user.id,item.movie,item.rating]
         #     B+=[A]
-        rating_df=pd.DataFrame(B,columns=['userId','movieId','rating'])
+        # rating_df=pd.DataFrame(B,columns=['userId','movieId','rating'])
         rating_df=pd.DataFrame(rating, columns=['classroom_id','rated_by', 'rating'])
         rating_df['classroom_id']=rating_df['classroom_id'].astype(str).astype(np.int64)
         rating_df['rated_by']=rating_df['rated_by'].astype(str).astype(np.int64)
@@ -47,13 +44,15 @@ class ComputeRecommendation:
                 for item in userInput:
                     C=[item.classroom.class_name,item.rating]
                     D+=[C]
-                input_classes=pd.DataFrame(D,columns=['class_name','rating'])
-                print("Watched Movies by user dataframe")
+                input_classes=pd.DataFrame(D,columns=['classroom_name','rating'])
+                # input_classes -> df of all the ratings given by him/her
                 input_classes['rating']=input_classes['rating'].astype(str).astype(np.float)
-                print(input_classes.dtypes)
+                # print(input_classes.dtypes)
 
-                #Filtering out the movies by title
-                input_id = classroom_df[classroom_df['class_name'].isin(input_classes['class_name'].tolist())]
+                #Filtering out the classrooms by classname
+                input_id = classroom_df[
+                    classroom_df['classroom_name'].isin(input_classes['classroom_name'].tolist())
+                ]
                 #Then merging it so we can get the class_id. It's implicitly merging it by title.
                 input_classes = pd.merge(input_id, input_classes)
                 # #Dropping information we won't use from the input dataframe
@@ -65,10 +64,10 @@ class ComputeRecommendation:
 
                 #Filtering out users that have watched movies that the input has watched and storing it
                 user_subset = rating_df[rating_df['classroom_id'].isin(input_classes['classroom_id'].tolist())]
-                # print(user_subset.head())
+                print(user_subset.head())
 
                 #Groupby creates several sub dataframes where they all have the same value in the column specified as the parameter
-                userSubsetGroup = user_subset.groupby(['user_id'])
+                userSubsetGroup = user_subset.groupby(['rated_by'])
                 
                 #print(userSubsetGroup.get_group(7))
 
@@ -77,9 +76,7 @@ class ComputeRecommendation:
 
                 # print(userSubsetGroup[0:])
 
-
                 userSubsetGroup = userSubsetGroup[0:]
-
 
                 #Store the Pearson Correlation in a dictionary, where the key is the user Id and the value is the coefficient
                 pearsonCorrelationDict = {}
@@ -108,18 +105,18 @@ class ComputeRecommendation:
                     else:
                         pearsonCorrelationDict[name] = 0
 
-                print(pearsonCorrelationDict.items())
+                # print(pearsonCorrelationDict.items())
 
                 pearsonDF = pd.DataFrame.from_dict(pearsonCorrelationDict, orient='index')
                 pearsonDF.columns = ['similarityIndex']
                 pearsonDF['user_id'] = pearsonDF.index
                 pearsonDF.index = range(len(pearsonDF))
-                print(pearsonDF.head())
+                # print(pearsonDF.head())
 
                 topUsers=pearsonDF.sort_values(by='similarityIndex', ascending=False)[0:]
-                print(topUsers.head())
+                # print(topUsers.head())
 
-                topUsersRating=topUsers.merge(rating_df, left_on='user_id', right_on='user_id', how='inner')
+                topUsersRating=topUsers.merge(rating_df, left_on='user_id', right_on='rated_by', how='inner')
                 topUsersRating.head()
 
                     #Multiplies the similarity by the user's ratings
@@ -141,5 +138,7 @@ class ComputeRecommendation:
 
                 recommendation_df = recommendation_df.sort_values(by='weighted average recommendation score', ascending=False)
                 recommender=classroom_df.loc[classroom_df['classroom_id'].isin(recommendation_df.head(5)['classroom_id'].tolist())]
-                print(recommender)
+                # print("_________________________________________________________________")
+                # print(recommender)
+                # print("_________________________________________________________________")
                 return recommender.to_dict('records')

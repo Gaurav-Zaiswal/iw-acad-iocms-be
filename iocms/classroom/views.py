@@ -1,21 +1,22 @@
-from django.db.models import Avg
+from django.db.models import Avg 
 from django.http import Http404, JsonResponse
 from django.core.exceptions import PermissionDenied
 
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.generics import RetrieveAPIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated 
 
-# from users.permissions import IsTeacherUser, IsStudentUser
+from users.permissions import IsStudentUser
 from custom_mixing import PaginationMixing
 from custom_pagination import CustomPageNumberPagination
 from users.models import User
 
 from .models import Classroom, ClassroomStudents, Rating
 from .serializers import ClassroomCreateSerializer, ClassroomDetailSerializer, ClassroomListSerializer, \
-    ClassroomAddSerializer, TopRatedClassSerializer
+    ClassroomAddSerializer, RatingSerializer, TopRatedClassSerializer
+
 
 
 class ClassroomView(APIView, PaginationMixing):
@@ -26,7 +27,6 @@ class ClassroomView(APIView, PaginationMixing):
         page = self.paginate_queryset(query)
         serializer = ClassroomListSerializer(page, many=True)
         return self.get_paginated_response(serializer.data)
-
 
 class ClassroomCreateView(APIView):
     permission_classes = [IsAuthenticated,]
@@ -42,7 +42,6 @@ class ClassroomCreateView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             raise PermissionDenied('Only teacher can create class')
-
 
 # Classroom detail
 class ClassroomDetailView(RetrieveAPIView):
@@ -64,7 +63,6 @@ class ClassroomDetailView(RetrieveAPIView):
             }
         )
         return context
-
 
 # Classroom List
 class ClassroomListView(APIView, PaginationMixing):
@@ -89,7 +87,6 @@ class ClassroomListView(APIView, PaginationMixing):
             student_enrolled_class_list = [classroom.classroom_id for classroom in enrolled_student]
             serializer = ClassroomListSerializer(student_enrolled_class_list, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
-
 
 class ClassroomAddView(APIView):
     permission_classes = [IsAuthenticated]
@@ -131,7 +128,6 @@ class ClassroomAddView(APIView):
         else:
             raise PermissionDenied("You do not have permission to view classes of other users.")
 
-
 class TopRatedClassrooms(APIView, PaginationMixing):
     """
     returns top rated classrooms on the basis of average rating given by students
@@ -145,3 +141,23 @@ class TopRatedClassrooms(APIView, PaginationMixing):
         page = self.paginate_queryset(qs)
         serializer = TopRatedClassSerializer(page, many=True)
         return self.get_paginated_response(serializer.data)  # from PaginatedMixing
+
+class RateClassroom(APIView):
+    #allow only students to access
+    #student can rate a class (if he/she is enrolled in it)
+
+    serializer_class = RatingSerializer
+    permission_classes = [IsAuthenticated, IsStudentUser]   
+    
+    def post(self, request, pk):
+        if request.user.is_student:
+            serializer = RatingSerializer(data=request.data)
+            request.data['rated_by'] = request.user.id # hopefully its student's id
+            request.data['classroom'] = pk
+            print(request.data)
+            if serializer.is_valid():
+                serializer.save()        
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            raise PermissionDenied('Only teacher can create class')

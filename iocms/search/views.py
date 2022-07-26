@@ -48,3 +48,4 @@ class RecomendationView(APIView):
         recommended_classes_dict = ComputeRecommendation.generateRecommendation(request)
         serializer = RecommendationListSerializer(recommended_classes_dict, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+ 

@@ -1,9 +1,14 @@
-from typing_extensions import Required
 from rest_framework import serializers
 from rest_framework import response
 
 from .models import Classroom, ClassroomStudents, Rating
 from users.serializers import UserSerializer, TeacherSerializer, StudentSerializer
+
+
+class BasicClassroomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Classroom
+        fields = ['id']
 
 
 class ClassroomCreateSerializer(serializers.ModelSerializer):
@@ -51,10 +56,23 @@ class ClassroomAddSerializer(serializers.ModelSerializer):
     
     def to_representation(self, instance):
         response = super().to_representation(instance)
-        response['enrolled_student_id'] = StudentSerializer(instance.enrolled_student_id).data
+        response['enrolled_student_id'] = StudentSerializer(instance.enrolled_student_id).data # add foreign key
         return response 
 
+class RatingSerializer(serializers.ModelSerializer):
+    """
+    serializer class to for rating.
+    """
+    class Meta:
+        model = Rating
+        fields = "__all__"
 
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['rated_by'] = StudentSerializer(instance.rated_by).data # add foreign key
+        response['classroom_id'] = BasicClassroomSerializer(instance.classroom).data # add foreign key
+        return response
+        
 
 class TopRatedClassSerializer(serializers.Serializer):
     """
@@ -88,5 +106,5 @@ class RecommendationListSerializer(serializers.Serializer):
     serializer for recommendation objects.
     """
     classroom_id = serializers.IntegerField()
-    class_description = serializers.CharField(max_length=500, required=False)
-    class_name = serializers.CharField(max_length=150)
+    classroom_description = serializers.CharField(max_length=500, required=False)
+    classroom_name = serializers.CharField(max_length=150)
