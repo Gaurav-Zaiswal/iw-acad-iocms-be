@@ -1,4 +1,5 @@
 import uuid
+# import Pillow
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
@@ -8,17 +9,23 @@ from django.core.exceptions import ValidationError
 # User = get_user_model()
 
 
+def covert_to_grayscale(file):
+    # TODO
+    # convert given image to grayscale and return it
+    pass
+
 
 def profile_pic_path(instance, filename):
-	# checks jpg exttension
-	extension = filename.split('.')[1]
-	if len(filename.split('.')) != 2:
-		raise ValidationError("image seems currupted...")
-	if extension not in ['jpg', 'jpeg']:
-		raise ValidationError("we currently accept jpg/jpeg formats only.")
-	unique_name = uuid.uuid4().hex
-	# print('author_pictures/' + unique_name + '.' + extension)
-	return 'author_pictures/' + unique_name + '.' + extension
+    # checks jpg exttension
+
+    extension = filename.split('.')[1]
+    if len(filename.split('.')) != 2:
+        raise ValidationError("image seems currupted...")
+    if extension not in ['jpg', 'jpeg']:
+        raise ValidationError("we currently accept jpg/jpeg formats only.")
+    unique_name = uuid.uuid4().hex
+    # print('author_pictures/' + unique_name + '.' + extension)
+    return 'author_pictures/' + unique_name + '.' + extension
 
 
 
