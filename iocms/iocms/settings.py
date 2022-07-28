@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'assignment',
     'feed',
     'search',
+    'attendance',
 
     'corsheaders',
     'rest_framework',

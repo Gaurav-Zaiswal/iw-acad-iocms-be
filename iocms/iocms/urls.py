@@ -12,6 +12,7 @@ urlpatterns = [
     path('assignment-api/', include('assignment.urls', namespace='assignment')),
     path('feed/', include('feed.urls', namespace='feed')),
     path('users/', include('users.urls'), name="user-register"),
+    path('attendance/', include('attendance.urls'), name="user-attendance"),
     path('search/', include('search.urls'), name='search'),
     path('for-you/', RecomendationView.as_view(), name='for-you'),
 ]

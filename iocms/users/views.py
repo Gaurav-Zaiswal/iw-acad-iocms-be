@@ -58,10 +58,11 @@ class UploadImage(APIView):
 
     def post(self, request):
         # request.data['student'] = request.user.id 
-        # assignment_file = request.FILES['file'] 
-        print(request.data)
+        # assignment_file = request.FILES['file']
+        # print("_______________________________________________________________") 
+        # print(request.FILES)
         try:
-            request.data['image'] = request.FILES['file'] 
+            request.data['image'] = request.FILES['image'] 
             serializer = ProfileSerializer(data = request.data)
         except: 
             serializer = ProfileSerializer(data = request.data)
