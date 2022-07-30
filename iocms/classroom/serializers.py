@@ -108,3 +108,17 @@ class RecommendationListSerializer(serializers.Serializer):
     classroom_id = serializers.IntegerField()
     classroom_description = serializers.CharField(max_length=500, required=False)
     classroom_name = serializers.CharField(max_length=150)
+
+
+class ClassroomSearchSerializer(serializers.ModelSerializer):
+    """
+    serializer for basic django search functionality
+    """
+    class Meta:
+        model = Classroom
+        fields = ['id', 'class_name', 'class_description', 'class_code'] 
+
+    # def to_representation(self, instance):
+    #     response = super().to_representation(instance)
+    #     response['created_by'] = TeacherSerializer(instance.created_by).data
+    #     return response 

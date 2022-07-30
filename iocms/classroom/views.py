@@ -5,7 +5,7 @@ from django.core.exceptions import PermissionDenied
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.generics import CreateAPIView, RetrieveAPIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated 
 
 from users.permissions import IsStudentUser
@@ -15,7 +15,7 @@ from users.models import User
 
 from .models import Classroom, ClassroomStudents, Rating
 from .serializers import ClassroomCreateSerializer, ClassroomDetailSerializer, ClassroomListSerializer, \
-    ClassroomAddSerializer, RatingSerializer, TopRatedClassSerializer
+    ClassroomAddSerializer, RatingSerializer, TopRatedClassSerializer, ClassroomSearchSerializer
 
 
 
@@ -161,3 +161,18 @@ class RateClassroom(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             raise PermissionDenied('Only teacher can create class')
+
+
+class Lookup(ListAPIView):
+    """
+    a normal Django search (using filter)
+    """
+    serializer_class = ClassroomSearchSerializer
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the purchases
+        for the currently authenticated user.
+        """
+        q = self.kwargs['q']
+        return Classroom.objects.filter(class_name__icontains=q)

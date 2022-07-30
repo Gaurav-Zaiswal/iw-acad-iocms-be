@@ -5,6 +5,7 @@ from django.conf.urls.static import static
 
 from search.views import RecomendationView
 
+from classroom.views import Lookup
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -13,7 +14,8 @@ urlpatterns = [
     path('feed/', include('feed.urls', namespace='feed')),
     path('users/', include('users.urls'), name="user-register"),
     path('attendance/', include('attendance.urls'), name="user-attendance"),
-    path('search/', include('search.urls'), name='search'),
+    path('search/', include('search.urls'), name='search'), # requires elasticsearch
+    path('lookup/<str:q>/', Lookup.as_view(), name='normal-search'),
     path('for-you/', RecomendationView.as_view(), name='for-you'),
 ]
 # if settings.DEBUG:
